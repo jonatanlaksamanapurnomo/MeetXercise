@@ -10,7 +10,7 @@ function keyPointParser(pose) {
 
 function getPoseVector(pose) {
     pose.keypoints = keyPointParser(pose)
-    console.log(pose)
+    // console.log(pose)
     const xPos = pose.keypoints.map(item => item.position.x)
     const yPos = pose.keypoints.map(item => item.position.y)
     let minX = Math.min(...xPos)
@@ -27,7 +27,7 @@ function getPoseVector(pose) {
 //and we use that [x1,y1,x2,y2 .... ,xn,yn] to find distance (imagine 3d space okkay) its like space vector model
 function cosineDistanceMatching(vector1, vector2) {
     const cosineSimilarity = similarity(vector1, vector2);
-    console.log(cosineSimilarity)
+    // console.log(cosineSimilarity)
     return cosineSimilarity;
 }
 
