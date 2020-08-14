@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {createAndOpenConnection,createAndJoinConnection} from "../rtc";
+import {createAndOpenConnection} from "../rtc";
 
 class Host extends Component {
      render() {
@@ -12,8 +12,8 @@ class Host extends Component {
           <hr />
           <div id="remote-videos-container"></div>
           
-          <img id="my-screenshot-host" style={{display:"none"}} />
-          <img id="my-screenshot-client" style={{display:"none"}}/>
+          <img id="my-screenshot-host" alt="" style={{display:"none"}} />
+          <img id="my-screenshot-client" alt="" style={{display:"none"}}/>
         </div>
         );
     }

@@ -1,5 +1,4 @@
 
-import $ from "jquery"
 import captureVideoFrame from "capture-video-frame"
 import {poseSimiliarity} from "./utill";
 import { v4 as uuidv4 } from 'uuid';

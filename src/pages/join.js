@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {createAndOpenConnection,createAndJoinConnection} from "../rtc";
+import {createAndJoinConnection} from "../rtc";
 
 class Join extends Component {
     render() {
@@ -12,6 +12,7 @@ class Join extends Component {
           <hr />
           <div id="remote-videos-container">
           </div>
+          <video autoplay></video>
         </div>
         );
     }
