@@ -19,7 +19,8 @@ async function getPose(frame) {
     return pose;
 }
 
-function createAndOpenConnection() {
+
+function createConnection(host = "https://rtcmulticonnection.herokuapp.com:443/") {
     let connection = new window.RTCMultiConnection();
     connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
 
@@ -32,6 +33,22 @@ function createAndOpenConnection() {
         OfferToReceiveAudio: false,
         OfferToReceiveVideo: true
     };
+    return connection;
+}
+
+function createAndOpenConnection(connection) {
+    // let connection = new window.RTCMultiConnection();
+    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    //
+    // connection.session = {
+    //     audio: false,
+    //     video: true
+    // };
+    //
+    // connection.sdpConstraints.mandatory = {
+    //     OfferToReceiveAudio: false,
+    //     OfferToReceiveVideo: true
+    // };
 
     let localVideosContainer = document.getElementById('local-videos-container')
     let remoteVideosContainer = document.getElementById('remote-videos-container')
@@ -53,7 +70,11 @@ function createAndOpenConnection() {
     };
 
     let predefinedRoomId = 'YOUR_Namee';
-    connection.open(predefinedRoomId);
+    connection.open(predefinedRoomId, (isOpen, roomId, err) => {
+        if (isOpen) {
+            console.log("mantap")
+        }
+    });
 
 
     setInterval(() => {
@@ -91,19 +112,19 @@ function createAndOpenConnection() {
     }, 1000)
 }
 
-function createAndJoinConnection() {
-    let connection = new window.RTCMultiConnection();
-    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-
-    connection.session = {
-        audio: false,
-        video: true
-    };
-
-    connection.sdpConstraints.mandatory = {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: true
-    };
+function createAndJoinConnection(connection) {
+    // let connection = new window.RTCMultiConnection();
+    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    //
+    // connection.session = {
+    //     audio: false,
+    //     video: true
+    // };
+    //
+    // connection.sdpConstraints.mandatory = {
+    //     OfferToReceiveAudio: false,
+    //     OfferToReceiveVideo: true
+    // };
 
     let localVideosContainer = document.getElementById('local-videos-container')
     let remoteVideosContainer = document.getElementById('remote-videos-container')
@@ -125,4 +146,4 @@ function createAndJoinConnection() {
 
 }
 
-export {createAndOpenConnection, createAndJoinConnection}
+export {createAndOpenConnection, createAndJoinConnection, createConnection}

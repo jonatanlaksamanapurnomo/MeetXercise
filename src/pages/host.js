@@ -1,11 +1,24 @@
 import React, {Component} from 'react';
-import {createAndOpenConnection} from "../rtc";
+import {createAndOpenConnection, createConnection} from "../rtc";
 
 class Host extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            conn: null
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            conn: new createConnection()
+        })
+    }
+
     render() {
         return (
             <div>
-                <button id="btn-open-room" onClick={() => createAndOpenConnection()}>Open Room</button>
+                <button id="btn-open-room" onClick={() => createAndOpenConnection(this.state.conn)}>Open Room</button>
                 <hr/>
                 <div id="local-videos-container">
                 </div>
