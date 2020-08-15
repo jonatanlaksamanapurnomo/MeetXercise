@@ -21,6 +21,7 @@
     "react-posenet": "^0.1.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-speech-recognition": "^3.2.0",
     "react-webcam": "^5.2.0",
     "tfjs-posenet": "jscriptcoder/tfjs-posenet",
     "uuid": "^8.3.0",

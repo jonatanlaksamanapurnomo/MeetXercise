@@ -49,13 +49,12 @@ class Home extends Component {
                         <div className="col-12 text-center ">
                             <p>Fun Exercise with your friend, classmate and all other people</p>
                         </div>
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-12">
-                                    <input type="text" value={this.state.roomID} onChange={this.handleChange}
+                        <div className="col-12 text-center ">
+                        <input type="text" value={this.state.roomID} onChange={this.handleChange}
                                            placeholder="Room ID"/>
-                                </div>
-                            </div>
+                        </div>
+                        <br /><br />
+                        <div className="col-12">
                             <div className="row">
                                 <div className="col-6 text-right">
                                     <Button size="sm" onClick={() => this.setRedirect('/host')}>Host</Button>

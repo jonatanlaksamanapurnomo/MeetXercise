@@ -1,6 +1,7 @@
 import captureVideoFrame from "capture-video-frame"
 import {poseSimiliarity} from "./utill";
 import {v4 as uuidv4} from 'uuid';
+import { Container } from "react-bootstrap";
 
 // import posenet from "@tensorflow-models/posenet"
 const posenet = require('@tensorflow-models/posenet');
@@ -47,6 +48,7 @@ function createAndOpenConnection(connection) {
         let video = event.mediaElement
         video.controls = false
         video.muted = true;
+        video.style.border = "thick solid black";
 
         if (event.type === 'local') {
             video.id = "host"
@@ -54,6 +56,12 @@ function createAndOpenConnection(connection) {
         } else if (event.type === 'remote') {
             anyClient = true
             video.id = uuidv4()
+            console.log(video)
+
+            // var temp = document.createElement('div');
+            // temp.innerHTML = "<Card>" + video.outerHTML + "</Card>"
+            // console.log(temp)
+
             remoteVideosContainer.appendChild(video)
         }
     };
@@ -96,6 +104,8 @@ function createAndOpenConnection(connection) {
                     let result = poseSimiliarity(pose, target)
                     console.log(result)
                     if (result > 0.1) {
+                        client.style.border = "thick solid green";
+                    } else {
                         client.style.border = "thick solid red";
                     }
                 })
