@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 
 // import posenet from "@tensorflow-models/posenet"
 const posenet = require('@tensorflow-models/posenet');
+var randomstring = require("randomstring");
 
 async function getPose(frame) {
     const net = await posenet.load({
@@ -69,7 +70,10 @@ function createAndOpenConnection(connection) {
         }
     };
 
-    let predefinedRoomId = 'YOUR_Namee';
+    const randomRoomId = randomstring.generate(5)
+    alert("ROOM ID : " + randomRoomId)
+    let predefinedRoomId = randomRoomId;
+    
     connection.open(predefinedRoomId, (isOpen, roomId, err) => {
         if (isOpen) {
             console.log("mantap")
@@ -112,7 +116,20 @@ function createAndOpenConnection(connection) {
     }, 1000)
 }
 
-function createAndJoinConnection(connection) {
+function checkRoomIsExist(connection, room){
+    connection.checkPresence(room, function(isRoomExist, roomid, error) {        
+        if (isRoomExist === true) {
+            return true
+        } else {
+            return false
+        }
+    });
+    
+    // temporary bypass
+    return true
+}
+
+function createAndJoinConnection(connection, room) {
     // let connection = new window.RTCMultiConnection();
     // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
     //
@@ -141,9 +158,8 @@ function createAndJoinConnection(connection) {
         document.body.appendChild(event.mediaElement);
     };
 
-    let predefinedRoomId = 'YOUR_Namee';
+    let predefinedRoomId = room;
     connection.join(predefinedRoomId);
-
 }
 
-export {createAndOpenConnection, createAndJoinConnection, createConnection}
+export {createAndOpenConnection, createAndJoinConnection, createConnection, checkRoomIsExist}
