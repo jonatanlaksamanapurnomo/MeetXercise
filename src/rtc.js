@@ -66,9 +66,7 @@ function openConnection(connection) {
 	};
 
 	const randomRoomId = randomstring.generate(5);
-	// alert("ROOM ID : " + randomRoomId);
 	let predefinedRoomId = randomRoomId;
-	predefinedRoomId = "abc";
 
 	localStorage.setItem("room", predefinedRoomId);
 
@@ -152,7 +150,6 @@ function joinConnection(connection, room) {
 	};
 
 	let predefinedRoomId = room;
-	predefinedRoomId = "abc";
 	
 	connection.extra = {
 		role: "client",

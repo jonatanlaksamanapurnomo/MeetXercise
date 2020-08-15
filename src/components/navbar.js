@@ -4,7 +4,6 @@ import "./navbar.css"
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 
-
 const navbar = (props) => {
 	return (
 		<>
@@ -21,13 +20,18 @@ const navbar = (props) => {
 				</Navbar.Brand>
 				<Navbar.Collapse className="justify-content-end">
 					<Button className="mr-3" onClick={() => {
-
 						Swal.fire({
 							position: 'bottom-start',
 							icon: 'success',
 							title: "Room ID : " + localStorage.getItem("room"),
 							showConfirmButton: false,
-							timer: 2500
+							timer: 2500,
+							showClass: {
+								popup: 'animate__animated animate__fadeInDown'
+							},
+							hideClass: {
+								popup: 'animate__animated animate__fadeOutUp'
+							}
 						})
 					}} variant="secondary" >Setting</Button>
 					<Link to="/" className="btn btn-danger">Exit</Link>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import { createConnection } from "../rtc";
+import Swal from 'sweetalert2'
 import "./home.css"
 
 class Home extends Component {
@@ -63,16 +64,26 @@ class Home extends Component {
                                     </div>
                                     <div className="col-6">
                                         <Button size="lg" onClick={() => {
-                                            // alert("try to join " + this.state.roomID)
                                             this.state.conn.checkPresence(this.state.roomID, (isRoomExist, roomid) => {
                                                 this.setState({
                                                     isExist: isRoomExist
                                                 }, () => {
-                                                    // alert("hasil check " + this.state.isExist)
                                                     if (this.state.isExist) {
                                                         this.setRedirect('/join')
                                                     } else {
-                                                        alert("Room Not Found")
+                                                        Swal.fire({
+                                                            position: 'center',
+                                                            icon: 'error',
+                                                            title: "Room ID *" + this.state.roomID +  "* not found!",
+                                                            showConfirmButton: false,
+                                                            timer: 2500,
+                                                            showClass: {
+                                                                popup: 'animate__animated animate__fadeInDown'
+                                                            },
+                                                            hideClass: {
+                                                                popup: 'animate__animated animate__fadeOutUp'
+                                                            }
+                                                        })
                                                     }
                                                 })
                                             });
