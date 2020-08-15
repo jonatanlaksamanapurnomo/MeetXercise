@@ -27,7 +27,6 @@ function getPoseVector(pose) {
 //and we use that [x1,y1,x2,y2 .... ,xn,yn] to find distance (imagine 3d space okkay) its like space vector model
 function cosineDistanceMatching(vector1, vector2) {
     const cosineSimilarity = similarity(vector1, vector2);
-    console.log(cosineSimilarity)
     return cosineSimilarity;
 }
 
