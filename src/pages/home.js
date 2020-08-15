@@ -41,7 +41,6 @@ class Home extends Component {
     render() {
         return (
             <div className="box">
-               
                 <div className="container h-100">
                     {this.renderRedirect()}
                     <div className="row h-100  justify-content-center align-items-center">

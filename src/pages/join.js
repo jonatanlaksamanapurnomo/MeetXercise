@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { createConnection, joinConnection } from "../rtc";
+import Navbar from "../components/navbar";
+import "./home.css"
 
 class Join extends Component {
 	constructor(props) {
@@ -9,42 +11,43 @@ class Join extends Component {
 		}
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		this.setState({
 			conn: new createConnection()
 		}, () => {
 			joinConnection(this.state.conn)
 		})
-	}	
+	}
 
 	render() {
 		return (
-			<div className="container h-100">
-				<div className="row h-100 justify-content-center align-items-center">
-					<div className="row">
-						<div className="col-12 text-center">
-							<h1>MeetXercise</h1>
-						</div>
-						<div className="col-12 text-center ">
-							<p>Fun Exercise with your friend, classmate and all other people</p>
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-12">
-							<div className="row">
-								<div className="col-6">
-									<div className="" id="coach-videos-container"></div>
+			<>
+				<div className="box">
+					<Navbar></Navbar>
+					<div className="container-fluid h-100">
+						<div className="h-100 justify-content-center align-items-center">
+							<div>
+								<div>
+									<div className="row">
+										<div className="col-12 mr-1 mt-1 ml-1 d-flex justify-content-center">
+											<div id="coach-videos-container">
+
+											</div>
+										</div>
+										<div className="col-12 mr-1 mb-1">
+											<div id="client-videos-container">
+
+											</div>
+										</div>
+									</div>
 								</div>
-								<div className="col-6">
-									<div id="client-videos-container"></div>
-								</div>
+								<img id="my-screenshot-host" alt="" style={{ display: "none" }} width="500" height="400" />
+								<img id="my-screenshot-client" alt="" style={{ display: "none" }} width="500" height="400" />
 							</div>
 						</div>
-						<img id="my-screenshot-host" alt="" style={{ display: "none" }} />
-						<img id="my-screenshot-client" alt="" style={{ display: "none" }} />
 					</div>
 				</div>
-			</div>
+			</>
 		);
 	}
 }

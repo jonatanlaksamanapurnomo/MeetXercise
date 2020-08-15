@@ -57,9 +57,9 @@ function openConnection(connection) {
 			video.className = "col-12";
 			localVideosContainer.appendChild(video);
 		} else if (event.type === "remote") {
-			anyClient = true;
+			anyClient = true
 			video.id = uuidv4();
-			video.className = "col-3 mr-1 mb-1";
+			video.className = "col-6 mt-1 mb-1";
 
 			remoteVideosContainer.appendChild(video);
 		}
@@ -97,7 +97,7 @@ function openConnection(connection) {
 
 			console.log("Total Client : " + clients.length)
 			clients.forEach((client) => {
-				client.className = "col-3";
+		
 				let frameClient = captureVideoFrame(client.id, "jpeg");
 				if (frameClient) {
 					let imgClient = document.getElementById("my-screenshot-client");
@@ -130,13 +130,16 @@ function joinConnection(connection, room) {
 
 	connection.onstream = function (event) {
 		let video = event.mediaElement;
+		video.style.border = "thick solid #154B7D";
+	
 
-		if (event.userid !== connection.userid && event.extra.role == "coach") {
+		if (event.extra.role === "coach") {
+			
 			coachVideosContainer.appendChild(video);
 		} else {
+			video.className="col-3 mr-1 mb-1"
 			clientVideosContainer.appendChild(video);
 		}
-		document.body.appendChild(event.mediaElement);
 	};
 
 	connection.onleave = function(user) {
@@ -156,14 +159,6 @@ function joinConnection(connection, room) {
 	}
 	connection.join(predefinedRoomId);
 
-
-	// setInterval(() => {
-	// 	connection.getAllParticipants().forEach((participantId) => {
-	// 		var user = connection.peers[participantId];
-	// 		// var role = user.extra.role;
-	// 		// console.log(role)
-	// 	});
-	// }, 1000)
 }
 
 function getUsersConn(connection) {
