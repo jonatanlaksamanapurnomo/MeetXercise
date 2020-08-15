@@ -10,7 +10,7 @@ function keyPointParser(pose) {
 
 function getPoseVector(pose) {
     pose.keypoints = keyPointParser(pose)
-    console.log(pose)
+    // console.log(pose)
     const xPos = pose.keypoints.map(item => item.position.x)
     const yPos = pose.keypoints.map(item => item.position.y)
     let minX = Math.min(...xPos)
