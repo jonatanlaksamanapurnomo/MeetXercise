@@ -37,20 +37,8 @@ function createConnection(host = "https://rtcmulticonnection.herokuapp.com:443/"
     return connection;
 }
 
+//open
 function createAndOpenConnection(connection) {
-    // let connection = new window.RTCMultiConnection();
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-    //
-    // connection.session = {
-    //     audio: false,
-    //     video: true
-    // };
-    //
-    // connection.sdpConstraints.mandatory = {
-    //     OfferToReceiveAudio: false,
-    //     OfferToReceiveVideo: true
-    // };
-
     let localVideosContainer = document.getElementById('local-videos-container')
     let remoteVideosContainer = document.getElementById('remote-videos-container')
     let anyClient = false
@@ -73,7 +61,7 @@ function createAndOpenConnection(connection) {
     const randomRoomId = randomstring.generate(5)
     alert("ROOM ID : " + randomRoomId)
     let predefinedRoomId = randomRoomId;
-    
+
     connection.open(predefinedRoomId, (isOpen, roomId, err) => {
         if (isOpen) {
             console.log("mantap")
@@ -116,33 +104,9 @@ function createAndOpenConnection(connection) {
     }, 1000)
 }
 
-function checkRoomIsExist(connection, room){
-    connection.checkPresence(room, function(isRoomExist, roomid, error) {        
-        if (isRoomExist === true) {
-            return true
-        } else {
-            return false
-        }
-    });
-    
-    // temporary bypass
-    return true
-}
 
+//join
 function createAndJoinConnection(connection, room) {
-    // let connection = new window.RTCMultiConnection();
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-    //
-    // connection.session = {
-    //     audio: false,
-    //     video: true
-    // };
-    //
-    // connection.sdpConstraints.mandatory = {
-    //     OfferToReceiveAudio: false,
-    //     OfferToReceiveVideo: true
-    // };
-
     let localVideosContainer = document.getElementById('local-videos-container')
     let remoteVideosContainer = document.getElementById('remote-videos-container')
 
@@ -162,4 +126,4 @@ function createAndJoinConnection(connection, room) {
     connection.join(predefinedRoomId);
 }
 
-export {createAndOpenConnection, createAndJoinConnection, createConnection, checkRoomIsExist}
+export {createAndOpenConnection, createAndJoinConnection, createConnection}

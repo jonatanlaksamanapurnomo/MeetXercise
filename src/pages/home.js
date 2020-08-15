@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button} from "react-bootstrap";
 import {Redirect} from 'react-router-dom';
-import {createConnection, checkRoomIsExist} from "../rtc";
+import {createConnection} from "../rtc";
 
 class Home extends Component {
     componentDidMount() {
@@ -14,7 +14,8 @@ class Home extends Component {
         conn: null,
         redirect: false,
         path: "",
-        roomID: ""
+        roomID: "",
+        isExist: false
     }
 
     setRedirect = (path) => {
@@ -28,7 +29,7 @@ class Home extends Component {
             return <Redirect to={{
                 pathname: this.state.path,
                 state: {roomID: this.state.roomID}
-            }} />
+            }}/>
         }
     }
 
@@ -51,9 +52,10 @@ class Home extends Component {
                         <div className="col-12">
                             <div className="row">
                                 <div className="col-12">
-                                    <input type="text" value={this.state.roomID} onChange={this.handleChange} placeholder="Room ID" />
+                                    <input type="text" value={this.state.roomID} onChange={this.handleChange}
+                                           placeholder="Room ID"/>
                                 </div>
-                            </div> 
+                            </div>
                             <div className="row">
                                 <div className="col-6 text-right">
                                     <Button size="sm" onClick={() => this.setRedirect('/host')}>Host</Button>
@@ -61,15 +63,19 @@ class Home extends Component {
                                 <div className="col-6">
                                     <Button size="sm" onClick={() => {
                                         alert("try to join " + this.state.roomID)
-                                        var isExist = checkRoomIsExist(this.state.conn, this.state.roomID)
-                                        alert("hasil check " + isExist)
+                                        this.state.conn.checkPresence(this.state.roomID, (isRoomExist, roomid) => {
+                                            this.setState({
+                                                isExist: isRoomExist
+                                            }, () => {
+                                                alert("hasil check " + this.state.isExist)
+                                                if (this.state.isExist) {
+                                                    this.setRedirect('/join')
+                                                } else {
+                                                    alert("Room Not Found")
+                                                }
+                                            })
+                                        });
 
-                                        if (isExist){
-                                            this.setRedirect('/join')
-                                        }
-                                        else{
-                                            alert("Room Not Found")
-                                        }
                                     }}>Join</Button>
                                 </div>
                             </div>
