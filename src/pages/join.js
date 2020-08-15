@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { createConnection, createAndJoinConnection } from "../rtc";
+import { createConnection, joinConnection } from "../rtc";
 
 class Join extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			conn: null,
-		};
+			conn: null
+		}
 	}
 
-	componentDidMount() {
+	componentDidMount(){
 		this.setState({
-			conn: new createConnection(),
-		});
-	}
+			conn: new createConnection()
+		}, () => {
+			joinConnection(this.state.conn)
+		})
+	}	
 
 	render() {
 		return (
@@ -26,29 +28,15 @@ class Join extends Component {
 						<div className="col-12 text-center ">
 							<p>Fun Exercise with your friend, classmate and all other people</p>
 						</div>
-						<div className="col-12 text-center ">
-							<button
-								id="btn-join-room"
-								onClick={() => {
-									alert("room id kiriman : " + this.props.location.state.roomID);
-									createAndJoinConnection(
-										this.state.conn,
-										this.props.location.state.roomID
-									);
-								}}
-							>
-								Join Room
-				</button>
-						</div>
 					</div>
 					<div className="row">
 						<div className="col-12">
 							<div className="row">
-								<div className="col-6 text-right">
-									<div className="" id="local-videos-container"></div>
+								<div className="col-6">
+									<div className="" id="coach-videos-container"></div>
 								</div>
 								<div className="col-6">
-									<div id="remote-videos-container"></div>
+									<div id="client-videos-container"></div>
 								</div>
 							</div>
 						</div>

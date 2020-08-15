@@ -1,139 +1,174 @@
-import captureVideoFrame from "capture-video-frame"
-import {poseSimiliarity} from "./utill";
-import {v4 as uuidv4} from 'uuid';
-import { Container } from "react-bootstrap";
+import captureVideoFrame from "capture-video-frame";
+import { poseSimiliarity } from "./utill";
+import { v4 as uuidv4 } from "uuid";
 
-// import posenet from "@tensorflow-models/posenet"
-const posenet = require('@tensorflow-models/posenet');
+const posenet = require("@tensorflow-models/posenet");
 var randomstring = require("randomstring");
 
 async function getPose(frame) {
-    const net = await posenet.load({
-        architecture: 'MobileNetV1',
-        outputStride: 16,
-        inputResolution: {width: 640, height: 480},
-        multiplier: 0.75
-    });
+	const net = await posenet.load({
+		architecture: "MobileNetV1",
+		outputStride: 16,
+		inputResolution: { width: 600, height: 500 },
+		multiplier: 1,
+	});
 
-    const pose = await net.estimateSinglePose(frame, {
-        flipHorizontal: false
-    });
-    return pose;
+	const pose = await net.estimateSinglePose(frame, {
+		flipHorizontal: true,
+	});
+	return pose;
 }
 
+function createConnection(
+	host = "https://rtcmulticonnection.herokuapp.com:443/"
+) {
+	let connection = new window.RTCMultiConnection();
+	connection.socketURL = "https://rtcmulticonnection.herokuapp.com:443/";
 
-function createConnection(host = "https://rtcmulticonnection.herokuapp.com:443/") {
-    let connection = new window.RTCMultiConnection();
-    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+	connection.session = {
+		audio: false,
+		video: true,
+	};
 
-    connection.session = {
-        audio: false,
-        video: true
-    };
-
-    connection.sdpConstraints.mandatory = {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: true
-    };
-    return connection;
+	connection.sdpConstraints.mandatory = {
+		OfferToReceiveAudio: false,
+		OfferToReceiveVideo: true,
+	};
+	return connection;
 }
 
 //open
-function createAndOpenConnection(connection) {
-    let localVideosContainer = document.getElementById('local-videos-container')
-    let remoteVideosContainer = document.getElementById('remote-videos-container')
-    let anyClient = false
+function openConnection(connection) {
+	let localVideosContainer = document.getElementById("local-videos-container");
+	let remoteVideosContainer = document.getElementById(
+		"remote-videos-container"
+	);
+	let anyClient = false;
 
-    connection.onstream = function (event) {
-        let video = event.mediaElement
-        video.controls = false
-        video.muted = true;
-        video.style.border = "thick solid black";
+	connection.onstream =  (event)=> {
+		let video = event.mediaElement;
+		video.controls = false;
+		video.muted = true;
+		video.style.border = "thick solid #154B7D";
+		video.style.padding = "0";
 
-        if (event.type === 'local') {
-            video.id = "host"
-            localVideosContainer.appendChild(video)
-        } else if (event.type === 'remote') {
-            anyClient = true
-            video.id = uuidv4()
-            console.log(video)
+		if (event.type === "local") {
+			video.id = "host";
+			video.className = "col-12";
+			localVideosContainer.appendChild(video);
+		} else if (event.type === "remote") {
+			anyClient = true;
+			video.id = uuidv4();
+			video.className = "col-3 mr-1 mb-1";
 
-            // var temp = document.createElement('div');
-            // temp.innerHTML = "<Card>" + video.outerHTML + "</Card>"
-            // console.log(temp)
+			remoteVideosContainer.appendChild(video);
+		}
+	};
 
-            remoteVideosContainer.appendChild(video)
-        }
-    };
+	const randomRoomId = randomstring.generate(5);
+	// alert("ROOM ID : " + randomRoomId);
+	let predefinedRoomId = randomRoomId;
+	predefinedRoomId = "abc";
 
-    const randomRoomId = randomstring.generate(5)
-    alert("ROOM ID : " + randomRoomId)
-    let predefinedRoomId = randomRoomId;
+	localStorage.setItem("room", predefinedRoomId);
 
-    connection.open(predefinedRoomId, (isOpen, roomId, err) => {
-        if (isOpen) {
-            console.log("mantap")
-        }
-    });
+	connection.extra = {
+		role: "coach",
+	}
+	connection.autoCloseEntireSession = true;
+	connection.open(predefinedRoomId, (isOpen, roomId, err) => {
+		if (isOpen) {
+			console.log("mantap");
+		}
+	});
 
+	setInterval(() => {
+		if (!anyClient) {
+			return;
+		}
 
-    setInterval(() => {
-        if (!anyClient) {
-            return
-        }
+		let clients = remoteVideosContainer.querySelectorAll("video");
 
-        let frameHost = captureVideoFrame('host', 'jpeg');
+		let frameHost = captureVideoFrame("host", "jpeg");
+		if (frameHost) {
+			let imgHost = document.getElementById("my-screenshot-host");
+			imgHost.setAttribute("src", frameHost.dataUri);
+			let poseHost = getPose(imgHost);
 
-        let clients = remoteVideosContainer.querySelectorAll("video")
-        clients.forEach((client) => {
-            let frameClient = captureVideoFrame(client.id, 'jpeg');
-            // Show the image
-            let imgHost = document.getElementById('my-screenshot-host');
-            imgHost.setAttribute('src', frameHost.dataUri);
+			console.log("Total Client : " + clients.length)
+			clients.forEach((client) => {
+				client.className = "col-3";
+				let frameClient = captureVideoFrame(client.id, "jpeg");
+				if (frameClient) {
+					let imgClient = document.getElementById("my-screenshot-client");
+					imgClient.setAttribute("src", frameClient.dataUri);
+					let poseClient = getPose(imgClient);
 
-            let imgClient = document.getElementById('my-screenshot-client');
-            imgClient.setAttribute('src', frameClient.dataUri);
+					poseHost.then((pose) => {
+						poseClient.then((target) => {
+							// console.log("Host dengan client " + client.id)
+							let result = poseSimiliarity(pose, target);
+							// document.getElementById("debug").innerHTML = result;
 
-            let poseHost = getPose(imgHost)
-            let poseClient = getPose(imgClient)
-
-            poseHost.then((pose) => {
-                poseClient.then((target) => {
-                    console.log("Host dengan client " + client.id)
-
-                    let result = poseSimiliarity(pose, target)
-                    console.log(result)
-                    if (result > 0.1) {
-                        client.style.border = "thick solid green";
-                    } else {
-                        client.style.border = "thick solid red";
-                    }
-                })
-            })
-        })
-    }, 1000)
+							if (result > 0.70) {
+								client.style.border = "thick solid green";
+							} else {
+								client.style.border = "thick solid red";
+							}
+						});
+					});
+				}
+			});
+		}
+	}, 250);
 }
-
 
 //join
-function createAndJoinConnection(connection, room) {
-    let localVideosContainer = document.getElementById('local-videos-container')
-    let remoteVideosContainer = document.getElementById('remote-videos-container')
+function joinConnection(connection, room) {
+	let coachVideosContainer = document.getElementById("coach-videos-container");
+	let clientVideosContainer = document.getElementById("client-videos-container");
 
-    connection.onstream = function (event) {
-        let video = event.mediaElement
+	connection.onstream = function (event) {
+		let video = event.mediaElement;
 
-        if (event.type === 'local') {
-            localVideosContainer.appendChild(video)
-        } else if (event.type === 'remote') {
-            remoteVideosContainer.appendChild(video)
-        }
+		if (event.userid !== connection.userid && event.extra.role == "coach") {
+			coachVideosContainer.appendChild(video);
+		} else {
+			clientVideosContainer.appendChild(video);
+		}
+		document.body.appendChild(event.mediaElement);
+	};
 
-        document.body.appendChild(event.mediaElement);
-    };
+	connection.onleave = function(user) {
+		var role = user.extra.role;
+		console.log("role yang leave : " + role)
+		if (role === "coach"){
+			connection.closeSocket();
+			window.location.href = "../";
+		}
+	};
 
-    let predefinedRoomId = room;
-    connection.join(predefinedRoomId);
+	let predefinedRoomId = room;
+	predefinedRoomId = "abc";
+	
+	connection.extra = {
+		role: "client",
+	}
+	connection.join(predefinedRoomId);
+
+
+	// setInterval(() => {
+	// 	connection.getAllParticipants().forEach((participantId) => {
+	// 		var user = connection.peers[participantId];
+	// 		// var role = user.extra.role;
+	// 		// console.log(role)
+	// 	});
+	// }, 1000)
 }
 
-export {createAndOpenConnection, createAndJoinConnection, createConnection}
+function getUsersConn(connection) {
+	let numberOfUsers = connection.getAllParticipants().length;
+	return numberOfUsers;
+}
+
+export { openConnection, joinConnection, createConnection, getUsersConn };

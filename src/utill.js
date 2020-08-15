@@ -1,33 +1,59 @@
 import similarity from 'compute-cosine-similarity';
 
 
-function keyPointParser(pose) {
-    return pose.keypoints.filter(item => {
-        return (item.part === "leftShoulder" || item.part === "rightShoulder" || item.part === "leftElbow" || item.part === "rightElbow"
-            || item.part === "leftWrist" || item.part === "rightWrist" || item.part === "leftHip" || item.part === "rightHip" || item.part === "leftKnee" || item.part === "rightKnee" || item.part === "leftAnkle" || item.part === "rightAnkle");
-    });
-}
-
 function getPoseVector(pose) {
-    pose.keypoints = keyPointParser(pose)
-    // console.log(pose)
-    const xPos = pose.keypoints.map(item => item.position.x)
-    const yPos = pose.keypoints.map(item => item.position.y)
-    let minX = Math.min(...xPos)
-    let minY = Math.min(...yPos)
+    let xPos = []
+    let yPos = []
     const vector = [];
-    // we want make [x1,y1,x2,y2] <- this part call normalize data structure not value
-    for (let i = 0; i < xPos.length; i++) {
-        vector.push(xPos[i] - minX)
-        vector.push(yPos[i] - minY)
+    if(pose.score > 0.3){
+        pose.keypoints.forEach(item => {
+            if(item.part === "leftShoulder" || item.part === "rightShoulder" || item.part === "leftElbow" || item.part === "rightElbow"
+                || item.part === "leftWrist" || item.part === "rightWrist" || item.part === "leftHip" || item.part === "rightHip" || item.part === "leftKnee" || item.part === "rightKnee" || item.part === "leftAnkle" || item.part === "rightAnkle"){
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                    xPos.push(item.position.x)
+                }
+                xPos.push(item.position.x)
+        });
+        pose.keypoints.forEach(item => {
+            if(item.part === "leftShoulder" || item.part === "rightShoulder" || item.part === "leftElbow" || item.part === "rightElbow"
+            || item.part === "leftWrist" || item.part === "rightWrist" || item.part === "leftHip" || item.part === "rightHip" || item.part === "leftKnee" || item.part === "rightKnee" || item.part === "leftAnkle" || item.part === "rightAnkle"){
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+                yPos.push(item.position.y)
+            }
+            yPos.push(item.position.y)
+        })
+    
+     
+        for (let i = 0; i < xPos.length; i++) {
+            vector.push(xPos[i])
+            vector.push(yPos[i])
+        }
     }
+  
     return vector;
 }
 
 //and we use that [x1,y1,x2,y2 .... ,xn,yn] to find distance (imagine 3d space okkay) its like space vector model
 function cosineDistanceMatching(vector1, vector2) {
-    const cosineSimilarity = similarity(vector1, vector2);
-    return cosineSimilarity;
+    // let cosineSimilarity = Correlation.calc(vector1, vector2);
+    let result = 0;
+    if(vector1.length > 5  && vector2.length > 5){
+         result = similarity(vector1, vector2);
+    }
+
+    return result;
 }
 
 

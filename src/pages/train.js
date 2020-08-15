@@ -22,8 +22,9 @@ function Train(props) {
     return (
         <div className="row">
             <div className="col-6">
-                <PoseNet inferenceConfig={{decodingMethod: "single-person"}} input={input2} onEstimate={(e) => {
+                <PoseNet inferenceConfig={{decodingMethod: "single-person"}}input={input2}  onEstimate={(e) => {
                     setPose(e[0])
+                
                 }}/>
                 <button onClick={() => poseSimiliarity(pose, target)}>print
                 </button>
