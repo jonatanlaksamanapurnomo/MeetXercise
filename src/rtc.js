@@ -7,14 +7,14 @@ var randomstring = require("randomstring");
 
 async function getPose(frame) {
 	const net = await posenet.load({
-		architecture: "MobileNetV1",
+		architecture: 'MobileNetV1',
 		outputStride: 16,
-		inputResolution: { width: 600, height: 500 },
-		multiplier: 1,
+		inputResolution: { width: 640, height: 480 },
+		multiplier: 0.75
 	});
 
 	const pose = await net.estimateSinglePose(frame, {
-		flipHorizontal: true,
+		flipHorizontal: false,
 	});
 	return pose;
 }
@@ -76,7 +76,7 @@ function openConnection(connection) {
 	connection.autoCloseEntireSession = true;
 	connection.open(predefinedRoomId, (isOpen, roomId, err) => {
 		if (isOpen) {
-			console.log("mantap");
+			// console.log("connect");
 		}
 	});
 
@@ -93,7 +93,7 @@ function openConnection(connection) {
 			imgHost.setAttribute("src", frameHost.dataUri);
 			let poseHost = getPose(imgHost);
 
-			console.log("Total Client : " + clients.length)
+			// console.log("Total Client : " + clients.length)
 			clients.forEach((client) => {
 		
 				let frameClient = captureVideoFrame(client.id, "jpeg");
@@ -104,11 +104,11 @@ function openConnection(connection) {
 
 					poseHost.then((pose) => {
 						poseClient.then((target) => {
-							// console.log("Host dengan client " + client.id)
+							// console.log("Host with client " + client.id)
 							let result = poseSimiliarity(pose, target);
-							// document.getElementById("debug").innerHTML = result;
+							// console.log(result)
 
-							if (result > 0.70) {
+							if (result > 0.75) {
 								client.style.border = "thick solid green";
 							} else {
 								client.style.border = "thick solid red";
@@ -142,7 +142,6 @@ function joinConnection(connection, room) {
 
 	connection.onleave = function(user) {
 		var role = user.extra.role;
-		console.log("role yang leave : " + role)
 		if (role === "coach"){
 			connection.closeSocket();
 			window.location.href = "../";
@@ -150,6 +149,7 @@ function joinConnection(connection, room) {
 	};
 
 	let predefinedRoomId = room;
+	predefinedRoomId = "jojo";
 	
 	connection.extra = {
 		role: "client",
