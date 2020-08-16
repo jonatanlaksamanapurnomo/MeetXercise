@@ -9,7 +9,8 @@
 [pict]: https://ik.imagekit.io/nwiq66cx3pvsy/messageImage_1597539880359.jpg
 
 # Demo
-Link Video : https://youtu.be/ya8J7ZDadyE
+Link Youtube : https://youtu.be/ya8J7ZDadyE
+Link Video (Google Drive) : https://drive.google.com/file/d/1nKwpkjud6s5p_LsZW-g0lj3b2dXyBqXy/
 
 # Inspiration
 Dealing with the Covid-19 virus, schools must carry out their teaching and learning activities from home. We've discovered that some of the subjects are difficult to do with the limitations of learning from home, and one of them is a sports subject. We wanted to solve this issue with a video conference exercise that can help sports teachers to monitor their students with the support of the auto-detection of the student movement.
